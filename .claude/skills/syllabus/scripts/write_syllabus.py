@@ -28,6 +28,12 @@ def write_syllabus(filepath: str, data: dict) -> dict:
 
     written = []
 
+    # --- 科目情報・到達目標 ---
+    if "到達目標" in data:
+        ws = wb["科目情報・到達目標"]
+        ws["A13"] = data["到達目標"]
+        written.append("到達目標")
+
     # --- 教育方法等・自由使用枠 ---
     if "教育方法等" in data:
         ws = wb["教育方法等・自由使用枠"]
