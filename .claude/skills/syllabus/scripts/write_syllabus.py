@@ -29,6 +29,11 @@ def write_syllabus(filepath: str, data: dict) -> dict:
     written = []
 
     # --- 科目情報・到達目標 ---
+    if "教科書_教材" in data:
+        ws = wb["科目情報・到達目標"]
+        ws["B8"] = data["教科書_教材"]
+        written.append("教科書_教材")
+
     if "到達目標" in data:
         ws = wb["科目情報・到達目標"]
         ws["A13"] = data["到達目標"]
@@ -41,6 +46,9 @@ def write_syllabus(filepath: str, data: dict) -> dict:
         if "概要" in info and info["概要"] is not None:
             ws["B3"] = info["概要"]
             written.append("教育方法等.概要")
+        if "授業の進め方" in info and info["授業の進め方"] is not None:
+            ws["B4"] = info["授業の進め方"]
+            written.append("教育方法等.授業の進め方")
         if "注意点" in info and info["注意点"] is not None:
             ws["B5"] = info["注意点"]
             written.append("教育方法等.注意点")
@@ -67,8 +75,18 @@ def write_syllabus(filepath: str, data: dict) -> dict:
 
     # --- 評価割合 ---
     if "評価割合" in data:
-        ws = wb["評価割合"]
         eval_data = data["評価割合"]
+
+        # 合計100バリデーション
+        total = 0
+        for perspective in eval_data.get("観点別配分", []):
+            for value in perspective.get("配分", {}).values():
+                if isinstance(value, (int, float)):
+                    total += value
+        if total != 100:
+            return {"error": f"評価割合の合計が {total} です。100になるよう修正してください。"}
+
+        ws = wb["評価割合"]
 
         for perspective in eval_data.get("観点別配分", []):
             row_map = {
