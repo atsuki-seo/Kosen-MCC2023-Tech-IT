@@ -112,23 +112,28 @@ def write_syllabus(filepath: str, data: dict) -> dict:
 
         ws = wb["評価割合"]
 
+        # テンプレートから評価方法ヘッダーを動的に読み取り（B1〜H1）
+        method_col_map = {}
+        for col in range(2, 9):
+            header = ws.cell(row=1, column=col).value
+            if header is not None:
+                method_col_map[header.strip()] = col
+
+        # テンプレートから観点名を動的に読み取り（A2〜A5）
+        row_map = {}
+        for row in range(2, 6):
+            obs_name = ws.cell(row=row, column=1).value
+            if obs_name is not None:
+                row_map[obs_name.strip()] = row
+
         for perspective in eval_data.get("観点別配分", []):
-            row_map = {
-                "知識の基本的な理解": 2,
-                "汎用的技能": 3,
-                "主体的・継続的な学習意欲": 4,
-                "態度・指向性": 5,
-            }
-            row = row_map.get(perspective.get("観点"))
+            obs = perspective.get("観点", "").strip()
+            row = row_map.get(obs)
             if row is None:
                 continue
 
-            method_col_map = {
-                "定期試験": 2, "小テスト": 3, "レポート": 4,
-                "口頭発表": 5, "成果物実技": 6, "ポートフォリオ": 7, "その他": 8,
-            }
             for method, value in perspective.get("配分", {}).items():
-                col = method_col_map.get(method)
+                col = method_col_map.get(method.strip())
                 if col is not None:
                     ws.cell(row=row, column=col, value=value)
         written.append("評価割合")
