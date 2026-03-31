@@ -402,7 +402,8 @@ Markdown: output/[ファイル名].md
 - ルーブリックの作文例（実際のシラバスから抽出）: `references/rubric-examples.md`
 - 評価方法のフォローアップ質問・重み付け方針: `references/evaluation-guide.md`
 - MCC対応付けの手順: `references/mcc-guide.md`
-- MCCカテゴリとキーワードのマッピング: `references/mcc-mapping.md`
+- MCCカテゴリとキーワードのマッピング（インデックス）: `references/mcc-mapping.md`
+- MCCカテゴリ別の到達目標詳細: `references/mcc-categories/` 配下の個別ファイル
 - 授業計画・出力項目の生成ルール: `references/course-design-guide.md`
 - 「授業の進め方」の構造化フォーマット: `references/teaching-method-guide.md`
 - 試験範囲の自動割り当て・確認フロー: `references/exam-scope-guide.md`
