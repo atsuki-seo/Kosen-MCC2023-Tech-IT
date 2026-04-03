@@ -14,15 +14,15 @@
 | ファイル/フォルダ | 説明 |
 |------------------|------|
 | `docs/Kosen-MCC2023-Tech.pdf` | MCC2023原本 |
-| `.claude/skills/syllabus/` | シラバス作成スキル |
+| `.claude/skills/class-syllabus/` | シラバス作成スキル |
 | `.claude/skills/class-test/` | テスト問題生成スキル |
 | `CLAUDE.md` | Claude Code用の指示ファイル |
 
-## syllabusスキル
+## class-syllabusスキル
 
 MCCに沿ったシラバスをエクセルテンプレートから作成・出力するスキル。
 
-使い方: Claude Codeで `/syllabus` を実行
+使い方: Claude Codeで `/class-syllabus` を実行
 
 2つのフローに対応:
 - **従来フロー**: 到達目標をもとに授業計画を組み立てる
