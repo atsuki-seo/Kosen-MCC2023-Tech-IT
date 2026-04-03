@@ -334,5 +334,6 @@ Moodle 4.x 自動採点対応の以下6形式をサポートする: multichoice,
 - 数値問題の作問例: `references/question-examples/numerical-examples.md`
 - 穴埋めClozeの作問例: `references/question-examples/cloze-examples.md`
 - マッチングの作問例: `references/question-examples/matching-examples.md`
+- 記述(Short answer)の作問例: `references/question-examples/shortanswer-examples.md`
 - 計算問題(Calculated)の作問例: `references/question-examples/calculated-examples.md`
 - 学生向け事前通知テキストの生成ガイド: `references/student-notice-guide.md`
