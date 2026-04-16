@@ -6,4 +6,9 @@
 *~
 
 # Skill output
-/output
+# 各授業のシラバス（.xlsx / .md）のみ管理下に置き、
+# tests/ や reports/ などの生成物・提出物・採点結果は無視する。
+/output/**
+!/output/*/
+!/output/*/*.xlsx
+!/output/*/*.md
