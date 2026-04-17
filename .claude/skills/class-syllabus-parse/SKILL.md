@@ -88,7 +88,7 @@ Step 5: 抽出結果全体の確認
 
 ### Step 3: スケジュールの抽出・表示
 
-レポート・試験のスケジュールを一括で抽出する。抽出ロジックの詳細は `references/syllabus-extraction-guide.md` を参照。
+レポート・試験のスケジュールを一括で抽出する。抽出ロジックの詳細はプロジェクトルートの `specs/syllabus-markdown-schema.md` を参照。
 
 表示フォーマット:
 ```
@@ -151,4 +151,4 @@ Step 2〜4 の全抽出結果をまとめて提示した後、`AskUserQuestion` 
 
 ## リファレンス
 
-- シラバスMarkdownからの抽出ロジック・正規化ルール: `references/syllabus-extraction-guide.md`
+- シラバス Markdown の入出力契約（抽出ロジック・正規化ルールの正本）: プロジェクトルートの `specs/syllabus-markdown-schema.md`

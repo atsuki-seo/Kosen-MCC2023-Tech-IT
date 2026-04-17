@@ -78,7 +78,7 @@ Step 8: 完了レポート
 - multiSelect: true
 - 質問文: 「作成するレポートを選んでください（すべて作成する場合は全て選択してください）」
 
-**レポート名の表記ルール**: レポート名は `class-syllabus-parse` の抽出時点で既に正規化ルール（`.claude/skills/class-syllabus-parse/references/syllabus-extraction-guide.md`）に従ってアラビア数字化済み。ディレクトリ名・ファイル名もこの正規化済みの名前で統一する。
+**レポート名の表記ルール**: レポート名は `class-syllabus-parse` の抽出時点で既に正規化ルール（プロジェクトルートの `specs/syllabus-markdown-schema.md` § 5.1）に従ってアラビア数字化済み。ディレクトリ名・ファイル名もこの正規化済みの名前で統一する。
 
 **複数レポートの処理**: 複数のレポートが選択された場合、Step 2〜Step 7 をレポートごとに繰り返す。各レポートの完了後に `AskUserQuestion` で「次のレポート（[レポート名]）に進む」「ここで終了する」を確認する。
 
@@ -208,7 +208,7 @@ mkdir -p "output/[開講年度]_[教科名]/reports/[レポート名]/submission
 
 ## リファレンス
 
-- シラバスからのレポート抽出ルール・正規化: `class-syllabus-parse` スキルの `references/syllabus-extraction-guide.md`
+- シラバス Markdown の入出力契約（レポート抽出・正規化ルールの正本）: プロジェクトルートの `specs/syllabus-markdown-schema.md`
 - 統合フロー・テーマ候補生成・課題設計のルール: `references/report-design-guide.md`
 - ルーブリック設計（シラバス観点の特殊化）のルール: `references/rubric-design-guide.md`
 - 出力ファイルのフォーマット仕様: `references/output-format.md`

@@ -92,7 +92,7 @@ Step 8: 完了レポート
 - options: 抽出した試験名リスト（例: 「小テスト1（第5週・範囲: 第1〜4週）」「小テスト2（第8週・範囲: 第5〜7週）」「小テスト3（第10週・範囲: 第8〜9週）」「期末試験（第15週・全範囲）」）
 - multiSelect: true（複数選択可能）
 
-**テスト名の表記ルール**: テスト名は `class-syllabus-parse` の抽出時点で既に正規化ルール（`.claude/skills/class-syllabus-parse/references/syllabus-extraction-guide.md`）に従ってアラビア数字化済み。ディレクトリ名・XMLカテゴリ名・ファイル名もこの正規化済みの名前で統一する。
+**テスト名の表記ルール**: テスト名は `class-syllabus-parse` の抽出時点で既に正規化ルール（プロジェクトルートの `specs/syllabus-markdown-schema.md` § 5.2）に従ってアラビア数字化済み。ディレクトリ名・XMLカテゴリ名・ファイル名もこの正規化済みの名前で統一する。
 
 **複数テストの処理**: 複数のテストが選択された場合、**各テストごとに Step 2〜7 を順次繰り返す**。1つのテストが Step 7 まで完了してから次のテストに進む。各テスト完了時に `AskUserQuestion` で「次のテスト（[テスト名]）に進む」「このテストをスキップして次へ」「すべて中断して終了」を確認する。中断された場合は作成済みのテストはそのまま残し、Step 8 の完了レポートで未完了分を明示する。
 
@@ -354,7 +354,7 @@ Moodle 4.x 自動採点対応の以下6形式をサポートする: multichoice,
 
 ## リファレンス
 
-- シラバス情報の抽出・正規化: `class-syllabus-parse` スキルの `references/syllabus-extraction-guide.md`
+- シラバス Markdown の入出力契約（抽出・正規化ルールの正本）: プロジェクトルートの `specs/syllabus-markdown-schema.md`
 - 問題構成の自動設計ロジック・難易度配分・時間バッファ・ポリシー別調整・AI耐性設計: `references/question-design-guide.md`
 - 問題形式別の作問ルール・品質基準: `references/question-types-guide.md`
 - Moodle XML仕様・テンプレート: `references/moodle-xml-format.md`
