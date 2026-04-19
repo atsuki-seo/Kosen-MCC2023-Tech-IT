@@ -46,7 +46,7 @@ flowchart TD
 
 - `class-slides` は提出物該当回の詳細化に `class-test` `class-report` の出力を参照する（点線）。必要なら slides より先にこれらを実行しておく。
 - `class-report-check` は `class-report` で生成した課題・ルーブリックを正本として採点する。
-- `class-syllabus-parse` を複数スキル連続利用の前に1回 `/class-syllabus-parse` で明示実行しておくと、コンテキスト再利用で効率化できる。
+- `class-syllabus-parse` はセッション冒頭で明示実行しておく。`class-test` と `class-report` を連続で叩くと compacting により parse 情報が劣化する可能性があるため、重い生成スキルはセッションを分けて都度 parse からやり直す。
 
 ## 出典
 
