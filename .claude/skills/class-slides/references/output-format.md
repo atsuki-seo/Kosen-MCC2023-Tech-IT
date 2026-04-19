@@ -52,13 +52,9 @@ class: flex-layout natural-height
 
 # 目次
 
-<div style="font-size: 28px;">
-
 - <節1>
 - <節2>
 - <節3>
-
-</div>
 
 ---
 
