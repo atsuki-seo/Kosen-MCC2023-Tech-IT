@@ -6,9 +6,29 @@
 *~
 
 # Skill output
-# 各授業のシラバス（.xlsx / .md）のみ管理下に置き、
-# tests/ や reports/ などの生成物・提出物・採点結果は無視する。
+# output/ 配下は原則無視した上で、個人情報を含まない成果物のみ明示的に許可する。
+# - 許可: シラバス / スライド / レポートの課題文・ルーブリック
+# - 無視: 学生提出物・採点結果・フィードバック・成績 / テスト問題一式
 /output/**
 !/output/*/
 !/output/*/*.xlsx
 !/output/*/*.md
+
+# スライド配下は丸ごと許可（学生配布物、個人情報なし）
+!/output/*/slides/
+!/output/*/slides/**
+
+# レポート課題文とルーブリック（学生配布物のみ）
+!/output/*/reports/
+!/output/*/reports/*/
+!/output/*/reports/*/*_課題.md
+!/output/*/reports/*/*_ルーブリック.md
+
+# 採点成果物は明示的に再無視
+/output/*/reports/*/feedback/
+/output/*/reports/*/submissions/
+/output/*/reports/*/*_採点一覧.md
+/output/*/reports/*/*_成績.csv
+
+# tests/ 配下は丸ごと無視（問題・解答・採点結果すべて個人/試験情報）
+# 上位の /output/** で既に無視されるため追加ルールは不要
