@@ -24,35 +24,28 @@
 
 ## スキルの実行順序・ユースケース
 
-### 依存関係
+正規フローは `syllabus → test & report → slides`。新規科目は `class-syllabus` から、既存シラバスを流用する場合は `class-syllabus-parse` から入る。
 
+```mermaid
+flowchart TD
+    A[新規科目を立ち上げる]:::entry --> S[class-syllabus<br/>シラバス作成]
+    B[既存シラバスを流用]:::entry --> P
+    S --> P[class-syllabus-parse<br/>共通前処理]
+    P --> T[class-test<br/>テスト生成]
+    P --> R[class-report<br/>レポート課題生成]
+    P --> SL[class-slides<br/>授業スライド生成]
+    R --> RC[class-report-check<br/>提出物採点]
+    T -.参照.-> SL
+    R -.参照.-> SL
+
+    classDef entry fill:#eef,stroke:#88a,stroke-width:1px;
 ```
-class-syllabus
-   └─→ class-syllabus-parse （共通前処理: 後続スキルから自動案内される）
-          ├─→ class-test
-          ├─→ class-report
-          │     └─→ class-report-check （学生提出物の採点時）
-          └─→ class-slides
-```
 
-`class-syllabus-parse` は単独で使うスキルではなく、後続スキル（test/report/slides）が未解析時にユーザーに事前実行を案内する**共通前処理**。複数の後続スキルを連続利用する場合のみ、先に1回実行しておくとコンテキスト再利用で効率化できる（Tips）。
+補足:
 
-### ユースケース別フロー
-
-**1. 新規科目を立ち上げる**
-`/class-syllabus` でシラバスを作成 → 必要に応じて後続スキルへ
-
-**2. 既存シラバスからテストを作る**
-`/class-test` を実行（未解析なら `/class-syllabus-parse` の事前実行が自動案内される）
-
-**3. 既存シラバスからレポート課題を作る**
-`/class-report` で課題・ルーブリック生成 → 学生提出後に `/class-report-check` で採点
-
-**4. 既存シラバスからスライドを作る**
-`/class-slides` を実行。提出物該当回の詳細化が必要なら `/class-test` `/class-report` を先に実行しておく
-
-**5. 複数スキルを連続利用する（効率化Tips）**
-先に `/class-syllabus-parse` を1回実行してコンテキストに乗せ、以降 test/report/slides で再利用する
+- `class-syllabus-parse` は単独で使わず、後続スキルが未解析時に事前実行を自動案内する**共通前処理**。複数スキルを連続利用する場合は先に1回実行しておくとコンテキスト再利用で効率化できる。
+- `class-slides` は提出物該当回の詳細化に `class-test` `class-report` の出力を参照する（点線）。必要なら slides より先にこれらを実行しておく。
+- `class-report-check` は `class-report` で生成した課題・ルーブリックを正本として採点する。
 
 ## 出典
 
