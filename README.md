@@ -30,6 +30,7 @@
 
 - **新規科目を立ち上げる**: `class-syllabus` から入る（シラバス作成 → 以降の運用フローへ）
 - **既存シラバスを流用する**: 目的に応じて `class-test` / `class-report` / `class-slides` から直接入る
+  - いずれのエントリーでも、初回実行時に `class-syllabus-parse`（シラバス解析の共通前処理）が後続スキルから自動案内される
 
 ```mermaid
 flowchart TD
@@ -39,19 +40,13 @@ flowchart TD
     R --> RC[class-report-check<br/>提出物採点]
     T -.参照.-> SL
     R -.参照.-> SL
-    P[class-syllabus-parse<br/>共通前処理（自動案内）]:::aux
-    P -.案内.-> T
-    P -.案内.-> R
-    P -.案内.-> SL
-
-    classDef aux fill:#fff,stroke:#aaa,stroke-dasharray:4 2;
 ```
 
 補足:
 
-- `class-syllabus-parse` は後続スキル（`class-test` / `class-report` / `class-slides`）が未解析時に事前実行を案内する**共通前処理**。ユーザーが直接呼ぶエントリーではなく、後続スキルから案内される。複数スキルを連続利用する場合は先に `/class-syllabus-parse` を1回実行しておくとコンテキスト再利用で効率化できる。
 - `class-slides` は提出物該当回の詳細化に `class-test` `class-report` の出力を参照する（点線）。必要なら slides より先にこれらを実行しておく。
 - `class-report-check` は `class-report` で生成した課題・ルーブリックを正本として採点する。
+- `class-syllabus-parse` を複数スキル連続利用の前に1回 `/class-syllabus-parse` で明示実行しておくと、コンテキスト再利用で効率化できる。
 
 ## 出典
 
