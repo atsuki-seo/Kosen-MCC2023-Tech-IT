@@ -45,6 +45,7 @@ flowchart TD
 補足:
 
 - `class-slides` は提出物該当回の詳細化に `class-test` `class-report` の出力を参照する（点線）。必要なら slides より先にこれらを実行しておく。
+- `class-slides` の PDF エクスポートは本リポジトリの親ディレクトリにある `marp-theme-nityc`（別リポジトリ、yuge テーマの CSS を提供）を参照する。未取得の場合は `../marp-theme-nityc/` に自動 clone する（`git@github.com:atsuki-seo/marp-theme-nityc.git`、SSH 鍵とネットワークが必要）。PDF 生成はデフォルト有効で、スキル実行中にスキップ可能。
 - `class-report-check` は `class-report` で生成した課題・ルーブリックを正本として採点する。
 - `class-syllabus-parse` はセッション冒頭で明示実行しておく。`class-test` と `class-report` を連続で叩くと compacting により parse 情報が劣化する可能性があるため、重い生成スキルはセッションを分けて都度 parse からやり直す。
 

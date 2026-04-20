@@ -49,7 +49,8 @@ Step 2: 授業時間と情報量の確認
 Step 3: 全回の骨子生成
 Step 4: 骨子プレビューと修正ループ
 Step 5: 回ごとの詳細化ループ（生成→プレビュー→修正→出力を対象回すべてに連続適用）
-Step 6: 完了レポート
+Step 6: PDF エクスポート（デフォルトON、スキップ可）
+Step 7: 完了レポート
 ```
 
 ### Step 0: シラバス情報の読み込み
@@ -190,7 +191,66 @@ mkdir -p "output/[開講年度]_[教科名]/slides"
 
 既に同名ファイルが存在する場合の挙動は `specs/file-output-policy.md` に従う。本スキルは § 1.2 のファイル単位で判定し、複数回の連続生成のため § 2.2 で許可される「スキップ」を選択肢に追加する。最終的な選択肢は「上書き」「別名で保存（`classNN_v2.md` 等、§ 3 のサフィックス規則）」「スキップ（この回を出力せず次の回へ進む）」「キャンセル（連続生成自体を中断）」。
 
-### Step 6: 完了レポート
+Step 5 で実際にファイルを書き出した回のリスト（MDファイルパスの配列）を保持し、Step 6 の PDF エクスポート対象として引き継ぐ。スキップ・キャンセルした回や、既存ファイルのまま変更しなかった回はリストに含めない。
+
+### Step 6: PDF エクスポート
+
+Step 5 で生成した Marp Markdown を PDF に変換する。PDF は MD の派生物であり、MD が確定した時点で最新状態に同期されるのが自然なので、本ステップをデフォルトで実行する。
+
+#### Step 6.1: 実行可否の確認
+
+`AskUserQuestion` で確認する:
+
+- options: 「生成する」「スキップ」
+- デフォルトは「生成する」
+
+「スキップ」が選ばれた場合は Step 7 へ進み、完了レポートはスキップ用のフォーマット（末尾参照）で出力する。
+
+#### Step 6.2: テーマリポジトリの準備
+
+`yuge` テーマの CSS を PDF 変換時に `--theme-set` で渡すため、テーマリポジトリがプロジェクトルートの親ディレクトリに clone 済みであることを確認する。
+
+- 確認するパス: プロジェクトルートからの相対で `../marp-theme-nityc/theme/yuge.css`
+- 存在する場合: pull せずそのまま使う（ユーザーがローカルでテーマを編集中の可能性があるため、勝手に更新しない）
+- 存在しない場合: 以下で親ディレクトリに clone する
+
+```bash
+git clone git@github.com:atsuki-seo/marp-theme-nityc.git ../marp-theme-nityc
+```
+
+clone に失敗した場合（ネットワーク断、SSH 鍵未設定、権限なし等）は **PDF 生成をスキップ**して Step 7 へ進む。完了レポートに失敗理由と手動復旧用のコマンドを記載する（末尾「PDF生成スキップ」フォーマット参照）。
+
+#### Step 6.3: PDF 一括生成
+
+Step 5 で実際に出力した MD ファイルだけを marp-cli に渡して PDF 化する。特定回モードで他回の MD が既存でも、今回のスキル実行で触っていないファイルは対象外とする（無関係な既存 PDF を勝手に更新しないため）。
+
+```bash
+npx -y @marp-team/marp-cli@latest \
+  --theme-set ../marp-theme-nityc/theme/yuge.css \
+  --pdf \
+  --allow-local-files \
+  output/[YYYY]_[教科]/slides/class01.md \
+  output/[YYYY]_[教科]/slides/class02.md \
+  ...
+```
+
+設計上のポイント:
+
+- **Chrome のパスは指定しない**: marp-cli / Puppeteer が OS 標準位置（Linux の `/usr/bin/google-chrome` や macOS の `/Applications/Google Chrome.app/...`）を自動検出する。Linux / Mac 両対応のため環境検出ロジックをスキル側に持たない
+- **`--allow-local-files` を常に付ける**: `--theme-set` でローカル CSS を参照しているため実質必須。警告は出るが動作には影響しない
+- **marp-cli はバージョン固定しない**: `@latest` を使い、破壊的変更で動かなくなった時点で固定を検討する
+- **既存 PDF は無確認で上書き**: PDF は MD の派生物であり、MD が Step 5 で確定した時点で最新に同期するのが一貫した挙動。MD 側の上書き/スキップ判定は Step 5.4 で既に済んでいる
+
+#### Step 6.4: 結果の収集
+
+marp-cli は個別ファイルの失敗を続行し、最後にまとめて報告する。成功した PDF のリストと、失敗したファイル・エラーメッセージを分離して保持し、Step 7 の完了レポートに反映する。
+
+- 一部失敗しても全体は完了扱い（MD 生成という主目的は Step 5 ですでに達成されている）
+- 失敗は通常 MD の構文エラーやテーマ解決失敗など自動リトライで直らない性質なので、自動再試行は行わず完了レポートで個別対応を促す
+
+### Step 7: 完了レポート
+
+**通常時**（PDF を生成した場合）:
 
 ```
 === 授業スライド生成完了 ===
@@ -199,9 +259,9 @@ mkdir -p "output/[開講年度]_[教科名]/slides"
 開講年度: [YYYY]
 
 生成したスライド:
-| 回 | タイトル | ファイル | 枚数 |
-|----|---------|---------|------|
-| 1 | ... | output/YYYY_[教科]/slides/class01.md | 20 |
+| 回 | タイトル | MDファイル | PDFファイル | 枚数 |
+|----|---------|-----------|------------|------|
+| 1 | ... | output/YYYY_[教科]/slides/class01.md | output/YYYY_[教科]/slides/class01.pdf | 20 |
 | ... |
 
 未処理の回（ある場合）:
@@ -212,10 +272,36 @@ mkdir -p "output/[開講年度]_[教科名]/slides"
 
 プレビュー方法:
   marp --watch output/YYYY_[教科]/slides/classNN.md
+```
 
-PDF/PPTXエクスポート:
-  marp output/YYYY_[教科]/slides/classNN.md --pdf
-  marp output/YYYY_[教科]/slides/classNN.md --pptx
+PDF が一部失敗した場合は、該当行の「PDFファイル」列を `— (生成失敗)` とし、末尾に失敗詳細を追記する:
+
+```
+⚠ PDF生成失敗
+- output/YYYY_[教科]/slides/classNN.md
+  エラー: [marp-cli のメッセージ]
+  対処: MD の記法エラーや mermaid 記述不整合の可能性。該当ファイルを確認してください。
+```
+
+**PDF スキップ時**（Step 6.1 でスキップを選択、または Step 6.2 でテーマ取得失敗）:
+
+テーブルは PDF 列なしの元フォーマットで出力し、末尾に手動生成コマンドを添える。
+
+```
+(テーブル: MD のみ、PDF 列なし)
+
+⏭ PDF生成はスキップされました
+後から生成する場合:
+  npx -y @marp-team/marp-cli@latest --theme-set ../marp-theme-nityc/theme/yuge.css --pdf --allow-local-files output/YYYY_[教科]/slides/*.md
+
+テーマ未取得の場合は先に:
+  git clone git@github.com:atsuki-seo/marp-theme-nityc.git ../marp-theme-nityc
+```
+
+PPTX が必要な場合はユーザーに以下を案内する（本スキルの自動生成対象外）:
+
+```
+marp output/YYYY_[教科]/slides/classNN.md --pptx
 ```
 
 ---
