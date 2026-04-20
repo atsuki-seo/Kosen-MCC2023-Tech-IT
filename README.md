@@ -24,6 +24,19 @@
 | `.claude/skills/class-topic-explainers/` | スライドから節単位のトピック解説Issue生成スキル |
 | `CLAUDE.md` | Claude Code用の指示ファイル |
 
+## セットアップ
+
+`./bootstrap.sh` を実行すると依存チェック・Python パッケージ導入・テーマリポジトリ取得・gh 認証確認を行う。`--minimal` で slides 関連をスキップ、`--help` で使い方表示。
+
+手動で入れるもの:
+
+- [Python 3](https://www.python.org/) — ランタイム
+  - [openpyxl](https://openpyxl.readthedocs.io/) — シラバス Excel 操作（bootstrap.sh が pip install --user）
+- [Node.js](https://nodejs.org/) — ランタイム
+  - [@marp-team/marp-cli](https://github.com/marp-team/marp-cli) — Marp スライドの PDF 変換（npx で都度実行）
+- [GitHub CLI (`gh`)](https://cli.github.com/) — Issue 作成・認証
+- [Google Chrome](https://www.google.com/chrome/) — Marp の PDF レンダリング
+
 ## スキルの実行順序・ユースケース
 
 正規フローは `syllabus → test & report → slides → topic-explainers & report-check`。
